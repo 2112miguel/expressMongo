@@ -1,20 +1,15 @@
 const express= require('express')
+const usr= require("../usercases/users")
 
 const router=express.Router()
 
-let usr,pswd
-
-router.get("/:id", (req,res)=>{
-    
-    const id=req.params.id
-    
+router.get("/:id", async(req,res)=>{
+    const users= await usr.get()
+    console.log("Usr display")
     res.json({
-        message:"Un usuario",
-        id: `${id}`,
-        usr: usr,
-        pswd: pswd
+        message: "Usuario",
+        playload: users
     })
-    console.log("Id :",id)
 })
 
 router.get("/",(req,res)=>{
@@ -24,14 +19,21 @@ router.get("/",(req,res)=>{
     })
 })
 
-router.post("/",(req,res)=>{
-   usr= req.body.usr
-   pswd=req.body.password
-    res.json({
-        message:"Usuario creado",
-        usr : `${usr}`,
-        pswd: pswd
-    })
+router.post("/", async(req,res)=>{
+   const {
+    name,
+    pswd,
+    img
+   }=req.body
+   const usrCreated= await usr.create({
+       name,
+       pswd,
+       img
+   })
+   res.json({
+       message:"Usr creado",
+       playload: usrCreated
+   })
 })
 
 router.put("/:id",(req,res)=>{

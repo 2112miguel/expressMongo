@@ -1,4 +1,5 @@
 const express= require('express')
+const product= require("../usercases/products")
 
 const router=express.Router()
 
@@ -8,26 +9,40 @@ router.get("/:id", (req,res)=>{
     
     res.json({
         message:"Un producto",
-        id: `${id}`
+       
+        
     })
     console.log("Id :",id)
 })
 
-router.get("/",(req,res)=>{
+router.get("/", async(req,res)=>{
+    //const producto = await product.get()
+    const products= await product.get()
     console.log("Soy un producto")
     res.json({
-        message: "Soy un producto"
+        message: "Soy un producto Creado",
+        playload: products
     })
 })
 
-router.post("/",(req,res)=>{
+router.post("/",async(req,res)=>{
+    
     const {
         name,
-        price
+        price,
+        description,
+        img
     }=req.body
+    const productCreated= await product.create({
+        name,
+        price,
+        description,
+        img
+    })
     res.json({
-        message:"producto creado",
-        play : {name,price}
+        success: true,
+        message:"Producto creado",
+        playload: productCreated
     })
 })
 

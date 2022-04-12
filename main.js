@@ -2,12 +2,19 @@ const express= require('express')
 const app = express()
 const port = 8000
 const apiRouter = require("./src/routes")
-
+const db = require("./src/lib/db")
 
 app.use(express.json())
 apiRouter(app)
 app.listen(port,()=>{
     console.log("listening on port 8000")
+    db.connect()
+    .then(()=>{
+        console.log("DB connected")
+    })
+    .catch((err)=>{
+        console.log("Error",err)
+    })
 })
 
 //import router from './src/routes/products.js'
