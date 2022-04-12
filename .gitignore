@@ -1,7 +1,7 @@
 # Created by https://www.toptal.com/developers/gitignore/api/node
 # Edit at https://www.toptal.com/developers/gitignore?templates=node
 
-#src/lib/db.js
+src/lib/db.js
 mongoDB.txt
 ### Node ###
 # Logs
