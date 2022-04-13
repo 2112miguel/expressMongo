@@ -1,26 +1,30 @@
+const { request } = require('express')
 const express= require('express')
+const { json } = require('express/lib/response')
 const product= require("../usercases/products")
 
 const router=express.Router()
 
-router.get("/:id", (req,res)=>{
+router.get("/:id", async(req,res)=>{
     
-    const id=req.params.id
-    
+    //const id=req.params.id
+    const {id}= req.params
+    //console.log(id)
+    const playload = await product.getById(id)
     res.json({
-        message:"Un producto",
-       
+       success:true,
+       playload: playload
         
     })
-    console.log("Id :",id)
+   // console.log("Id :",id)
 })
 
 router.get("/", async(req,res)=>{
-    //const producto = await product.get()
+    
     const products= await product.get()
     console.log("Soy un producto")
     res.json({
-        message: "Soy un producto Creado",
+        message: true,
         playload: products
     })
 })
@@ -46,17 +50,44 @@ router.post("/",async(req,res)=>{
     })
 })
 
-router.put("/:id",(req,res)=>{
+router.put("/:id",async(req,res)=>{
     const {id}= req.params
-    const {name,price}=req.body
+    const { name,price, descrip,img}=req.body
+    //console.log("Entra")
+    const productUpdate= await product.update(id, { name,price, descrip,img})
     res.json({
         message:`Producto ${id}`,
-        playload: {name,price}
+        playload: {productUpdate}
     })
 })
 
-router.delete("./id",(req,res)=>{
-    
+router.delete("/:id", async(req,res,next)=>{
+    try {
+        console.log("Intenta borrar")
+        const {id}= req.params
+        const productDel= await product.del(id)
+        res.json({
+            success:true,
+            message: "Hola",
+            playload: productDel
+        })
+    } catch (error) {
+        
+    }
+})
+
+router.patch("/:id", async(req,res,next)=>{
+    try {
+        const {id} = req.params
+        const productUpdate = await product.patch(id, {...req.body})
+        res,json({
+            success: true,
+            message: "Producto Actualizado",
+            playload: {productUpdate}
+        })
+    } catch (error) {
+        next(error)
+    }
 })
 
 module.exports=router

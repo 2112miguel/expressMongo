@@ -1,8 +1,9 @@
 const mongoose= require("mongoose")
+const config = require("./config")
 
 const connect=()=>{
     return new Promise((resolve,reject)=>{
-        mongoose.connect("mongodb+srv://adminjs:IyluFlWXFchK8Xfy@cluster0.dv4df.mongodb.net/KodemiaStore?retryWrites=true&w=majority",
+        mongoose.connect(`${config.db.host}`,
         {useNewUrlParser:true}
         )
         const db= mongoose.connection

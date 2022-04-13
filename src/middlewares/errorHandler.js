@@ -6,7 +6,7 @@ const logError =(err,req,res,next)=>{
 
 const errorHandler=(err,req,res,next)=>{
     const {message}=err
-    res.status(500).json({message})
+    res.status(500).json({success: message})
 }
 
 module.exports={logError, errorHandler}
