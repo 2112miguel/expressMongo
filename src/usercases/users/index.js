@@ -5,6 +5,10 @@ const get = async()=>{
     return allUsers
 }
 
+const getById =async (id)=>{
+    return await User.findById(id).exec()
+}
+
 const create = async(userData)=>{
     const {name,pswd,img}=userData
     const newUser = new User({
@@ -14,7 +18,15 @@ const create = async(userData)=>{
     return saveUsr
 }
 
+const update = async(id,userData)=>{
+    const {name,pswd,img}=userData
+    const updateUsr = await User.findByIdAndUpdate(id,{name,pswd,img}).exec()
+    return updateUsr
+}
+
 module.exports={
     get,
-    create
+    create,
+    getById,
+    update
 }

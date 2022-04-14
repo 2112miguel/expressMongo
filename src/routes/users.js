@@ -12,10 +12,11 @@ router.get("/:id", async(req,res)=>{
     })
 })
 
-router.get("/",(req,res)=>{
-    console.log("Soy un usuario")
+router.get("/",async(req,res)=>{
+    const user = await usr.get()
     res.json({
-        message: "Soy un usuario"
+        message: true,
+        playload: user
     })
 })
 

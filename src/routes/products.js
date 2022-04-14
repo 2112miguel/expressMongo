@@ -80,7 +80,7 @@ router.patch("/:id", async(req,res,next)=>{
     try {
         const {id} = req.params
         const productUpdate = await product.patch(id, {...req.body})
-        res,json({
+        res.json({
             success: true,
             message: "Producto Actualizado",
             playload: {productUpdate}
