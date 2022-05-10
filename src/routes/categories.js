@@ -1,47 +1,78 @@
 const express= require('express')
+const category= require('../usercases/categories')
 
 const router=express.Router()
 
-router.get("/:id", (req,res)=>{
-    
-    const id=req.params.id
-    
-    res.json({
-        message:"Un producto",
-        id: `${id}`
-    })
-    console.log("Id :",id)
+router.get("/:id", async(req,res,next)=>{
+    try {
+        const {id} = req.params
+        const retrievedCategory = await category.getById(id)
+        res.json({
+            success: true,
+            playload: retrievedCategory
+        })
+    } catch (error) {
+        next(error)
+    }
 })
 
-router.get("/",(req,res)=>{
-    console.log("Soy un producto")
-    res.json({
-        message: "Soy un producto"
-    })
+router.get("/",async(req,res,next)=>{
+    try {
+        const categories = await category.getAll()
+        res.json({
+            success: true,
+            playload: categories
+        })
+    } catch (error) {
+        next(error)
+    }
 })
 
-router.post("/",(req,res)=>{
-    const {
-        name,
-        price
-    }=req.body
-    res.json({
-        message:"producto creado",
-        play : {name,price}
-    })
+router.post("/", async(req,res,next)=>{
+    try {
+        const {name}=req.body
+        console.log(req.body)
+        const createdCategory = await category.create(name)
+        res.json({
+            success: true,
+            message:"producto creado",
+            playload : createdCategory
+        })
+    } catch (error) {
+        next(error)
+    }
 })
 
-router.put("/:id",(req,res)=>{
-    const {id}= req.params
-    const {name,price}=req.body
-    res.json({
-        message:`Producto ${id}`,
-        playload: {name,price}
-    })
+router.put("/:id",async(req,res,next)=>{
+    try {
+        const {id} = req.params
+        const {name} = req.body
+        
+        const updatedCategory = await category.update(id,name)
+
+        res.json({
+            success: true,
+            message: "Categoria actialida",
+            playload: updatedCategory
+        })
+    } catch (error) {
+        next(error)
+    }
 })
 
-router.delete("./id",(req,res)=>{
-    
+router.delete("./id",async(req,res,next)=>{
+    try {
+        const {id} = req.params
+        const delCategory = await category.del(id)
+        
+        res.json({
+            success: true,
+            message: "Categoria eliminada",
+            playload: delCategory
+        })
+    } catch (error) {
+        next(error)
+    }
 })
 
 module.exports=router

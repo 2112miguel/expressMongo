@@ -1,53 +1,60 @@
-const express= require('express')
-const usr= require("../usercases/users")
+const express = require("express");
+const usr = require("../usercases/users");
+const jwt = require("../lib/jwt");
+const router = express.Router();
+const { autHandler } = require("../middlewares/authHandlers");
 
-const router=express.Router()
-
-router.get("/:id", async(req,res)=>{
-    const users= await usr.get()
-    console.log("Usr display")
+router.get("/:id", async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const retriUsr = await usr.getById(id);
     res.json({
-        message: "Usuario",
-        playload: users
-    })
-})
+      success: true,
+      playload: retriUsr,
+    });
+  } catch (error) {
+    next(error);
+  }
+});
 
-router.get("/",async(req,res)=>{
-    const user = await usr.get()
+router.get("/", async (req, res) => {
+  const user = await usr.get();
+  res.json({
+    message: true,
+    playload: user,
+  });
+});
+
+router.post("/", async (req, res) => {
+  try {
+    const { firstName, lastName, email, pswd, role } = req.body;
+
+    const usrCreated = await usr.create({
+      firstName,
+      lastName,
+      email,
+      pswd,
+      role,
+    });
     res.json({
-        message: true,
-        playload: user
-    })
-})
+      success: true,
+      message: "Usr creado",
+      payload: usrCreated,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+});
 
-router.post("/", async(req,res)=>{
-   const {
-    name,
-    pswd,
-    img
-   }=req.body
-   const usrCreated= await usr.create({
-       name,
-       pswd,
-       img
-   })
-   res.json({
-       message:"Usr creado",
-       playload: usrCreated
-   })
-})
+router.put("/:id", (req, res) => {
+  const { id } = req.params;
+  const { name, price } = req.body;
+  res.json({
+    message: `Producto ${id}`,
+    playload: { name, price },
+  });
+});
 
-router.put("/:id",(req,res)=>{
-    const {id}= req.params
-    const {name,price}=req.body
-    res.json({
-        message:`Producto ${id}`,
-        playload: {name,price}
-    })
-})
+router.delete("./id", (req, res) => {});
 
-router.delete("./id",(req,res)=>{
-    
-})
-
-module.exports=router
+module.exports = router;

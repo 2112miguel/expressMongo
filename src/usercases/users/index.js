@@ -1,32 +1,48 @@
 const User= require("../../models/user").model
+//const { hash } = require("bcrypt")
+const encrypt = require("../../lib/encrypt")
 
-const get = async()=>{
-    const allUsers = await User.find({}).exec()
-    return allUsers
+const get= async()=>{
+    return await User.find({}).exec()
 }
 
 const getById =async (id)=>{
     return await User.findById(id).exec()
 }
 
-const create = async(userData)=>{
-    const {name,pswd,img}=userData
-    const newUser = new User({
-        name,pswd,img
-    })
-    const saveUsr= await newUser.save()
-    return saveUsr
+const getByEmail = async (email)=>{
+    return await User.findOne({email}).exec()
 }
 
-const update = async(id,userData)=>{
-    const {name,pswd,img}=userData
-    const updateUsr = await User.findByIdAndUpdate(id,{name,pswd,img}).exec()
-    return updateUsr
+const authenticate = async(user,pswd)=>{
+    const hash = await encrypt.hashpswd(pswd)
+    return await encrypt.verifyPswd(pswd,hash)
+}
+
+const create = async(userData)=>{
+    const {firstName,
+        lastName,
+        email,
+        pswd,
+        role
+    }=userData
+    const newUser = new User({
+        firstName,
+           lastName,
+           email,
+           pswd,
+           role
+    })
+    console.log("Aqui esta: ",userData)
+    const saveUsr= await newUser.save()
+    console.log(saveUsr)
+    return saveUsr
 }
 
 module.exports={
     get,
     create,
     getById,
-    update
+    getByEmail,
+    authenticate
 }

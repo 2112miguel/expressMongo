@@ -2,9 +2,11 @@ const express= require('express')
 const app = express()
 const port = 8000
 const apiRouter = require("./src/routes")
+const {errorHandler, logErrors} = require("./src/middlewares/errorHandler")
+const {authHandler} = require('./src/middlewares/authHandlers')
 const db = require("./src/lib/db")
-
 app.use(express.json())
+//app.use(authHandler)
 apiRouter(app)
 app.listen(port,()=>{
     console.log("listening on port 8000")

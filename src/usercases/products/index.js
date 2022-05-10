@@ -12,9 +12,11 @@ const getById= async (id)=>{
 }
 
 const create = async (productData)=>{
-    const { name,price, descrip,img}=productData
+    
+    const { name,price, description,img, categories}=productData
+    console.log("Aqui entra indexProduc",productData)
     const newProduct = new Product({
-        name,price, descrip,img
+        name,price, description,img,categories
     })
     const saveProduct= await newProduct.save()
     return saveProduct
